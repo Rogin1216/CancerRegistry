@@ -9,7 +9,7 @@
   <!-- <router-view></router-view> -->
   <div class="main">
     <img class="bghlogo" src="../assets/bghmc-logo.png" alt="">
-    <p class="sign">Cancer Registry</p>
+    <p class="sign">Cancer Registry dummy</p>
     <form @submit.prevent="handleSubmit" class="form1">
       <div>
         <input class="un " v-model="form.username" type="text" placeholder="HOMIS">
