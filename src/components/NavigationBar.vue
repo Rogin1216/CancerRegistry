@@ -2,22 +2,33 @@
 <div class="container-fluid">
   <!-- <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;"> -->
   <div id="wrapper">
-    <ul class="navbar-nav bg-gradient-primary sidebar bg-dark" style="width:15%; height:100%;">
+    <ul class="navbar-nav bg-gradient-primary sidebar bg-dark" style="width:250px; height:100%;">
       <div id="logobg">
         <a href="" ><img src="../assets/bghmc-banner.png" alt="" id="bghmclogo"></a>
       </div>
+      <div id="username">
+        <label for=""><small><h6><i>{{this.taskStore.localUser}}</i></h6></small></label>
+      </div>
       <div class="sidebar-nav">
+        
+        
         <router-link to="/Dashboard"><li>Dashboard</li></router-link>
-        <router-link to="/SearchPatient"><li>Search</li></router-link>
+        <router-link to="/SearchPatient"><li>Search For Patient</li></router-link>
+        <router-link to="/Lists"><li>Lists of Cancer Patient
+            
+        </li></router-link>
         <router-link to="/"><li v-on:click="logout" style="color:#FF0000; bottom:0px;">Logout</li></router-link>
         <!-- <router-link to="/SearchPatient"><li><a href="#" class="active">Patient List</a></li></router-link> -->
+        <!-- <li class="updateTab"><small>Update</small> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+            <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+          </svg></li> -->
       </div>
-
     </ul>
-    <div id="content" class="">
-      <router-view></router-view>
-    </div>
-
+  </div>
+  <div id="content">
+    <!-- <div class="updateNews">news</div> -->
+    <router-view ></router-view>
   </div>
 
 </div>
@@ -38,23 +49,57 @@
 
 </template>
 <script>
+import { useTaskStore } from '../store/TaskStore'
     export default{
+        setup(){
+            const taskStore = useTaskStore()
+            return { taskStore }
+        },
+        data(){
+            return{
+                username: localStorage.getItem('userName')
+            }
+        },
         methods:{
             logout(){
                 console.log(localStorage)
                 
                     localStorage.removeItem('Token');
-
-                
+                    localStorage.removeItem('userName');
                 // localStorage.removeItem('Token');
                 // this.$router.push({name:'/'})
             }
         },
-        
+        mounted(){
+            let user = localStorage.getItem('Token');
+            if(!user){
+                console.log('mounted')
+            }
+        }
     }
 </script>
 
 <style scoped>
+#username{
+    color:black;
+    background: #f7ec54;
+}
+
+.updateTab{
+    background-color:thistle;
+    border-radius: 0 100px/120px 0 0;
+    margin-top:100%;
+    bottom:0;
+}
+.updatetab:hover .updateNews{
+    position: absolute;
+    width: 200px;
+    display:block;
+
+}
+.updateNews{
+    display:none
+}
  .container-fluid {
     height: 100%;
     overflow-y: hidden;
@@ -111,6 +156,7 @@ ul{
     top: 0;
     width: 250px;
     padding: 0;
+    height:100%;
     list-style: none;
 }
 
@@ -207,7 +253,7 @@ li:hover::after{
 
 #content{
   width: auto;
-  margin-left: 15%;
+  margin-left: 250px;
 }
 
 

@@ -9,27 +9,31 @@
   <!-- <router-view></router-view> -->
   <div class="main">
     <img class="bghlogo" src="../assets/bghmc-logo.png" alt="">
-    <p class="sign">Cancer Registry dummy</p>
-    <form @submit.prevent="handleSubmit" class="form1">
+    <p class="sign">Cancer Registry</p>
+    <v-form @submit="login" class="form1">
       <div>
-        <input class="un " v-model="form.username" type="text" placeholder="HOMIS">
-        <input class="pass" v-model="form.password" type="password" placeholder="Password">
+        <input class="un " v-model="this.taskStore.username" type="text" placeholder="HOMIS">
+        <input class="pass" @keyup.enter="login" v-model="this.taskStore.password" type="password" placeholder="Password">
       </div>
       <div>
-        <a v-on:click="login" class="submit">Sign in</a>
+        <v-btn type="submit" v-on:click="login" class="submit">Sign in</v-btn>
         
         <!-- <router-link to="/"><a v-on:click="login" class="submit">Sign in</a></router-link> -->
       </div>
-    </form>       
+    </v-form>       
   </div>
 </template>
 <script>
 // import { reactive } from '@vue/reactivity'
 import axios from 'axios'
 import setAuthHeader from '@/utils/setAuthHeader';
+import { useTaskStore } from '../store/TaskStore'
 
 export default{
-
+  setup(){
+        const taskStore = useTaskStore()
+        return { taskStore }
+      },
 // ---------------------------------
   data() {
     return{
@@ -38,34 +42,40 @@ export default{
         password:'',
       },
       status:'',
-      loading: false
+      loading: false,
+      
     }
   },
   methods: {
 
     async login(){
-      // console.log(this.form.username)
       const account = {
-        username:this.form.username,
-        password:this.form.password
+        username:this.taskStore.username,
+        password:this.taskStore.password
       };
       this.loading = true;
 
-      let res = await axios
-            .post('http://192.168.7.188:8040/api/login', account)
-            // .then(res=>{
-            //   this.loading=false;
-            // })
-            .catch(function (error) {
-                      console.log(error.toJSON());
-                    });
+      let res = await this.taskStore.login
+      console.log(res.status)
+      // let res = await axios
+      //       .post('http://192.168.7.188:8040/api/login', account)
+      //       // .then(res=>{
+      //       //   this.loading=false;
+      //       // })
+      //       .catch(function (error) {
+      //                 console.log(error.toJSON());
+      //                 alert(error);
+      //                 // alert("Something is wrong, please try again later")
+      //               });
 
+                    
             if(res.status==200){
-              // alert('adsfasdfs')
-
+              // alert(res.status)
               localStorage.setItem('Token', res.data)
               this.$router.push({name:'Dashboard'})
+              localStorage.setItem('userName', this.taskStore.username);
             }
+
 
     }
 

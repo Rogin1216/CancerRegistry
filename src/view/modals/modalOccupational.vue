@@ -17,44 +17,44 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Air contaminants">
-                                                        <label class="form-check-label" for="">Air contaminants</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.AirContaminants" :false-value="''" :true-value="'Air Contaimants'" type="checkbox" id="E1" >
+                                                        <label class="form-check-label" for="E1">Air contaminants</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Toxic waste">
-                                                        <label class="form-check-label" for="">Toxic waste</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.ToxicWaste" :false-value="''" :true-value="'Toxic Waste'" type="checkbox" id="E2" >
+                                                        <label class="form-check-label" for="E2">Toxic waste</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="" value="Radiation" >
-                                                        <label class="form-check-label" for="">Radiation</label>
+                                                        <input class="form-check-input" v-model="this.patStore.occupational.ExposureTo.Radiation" :false-value="''" :true-value="'Radiation'" type="checkbox" id="E3"  >
+                                                        <label class="form-check-label" for="E3">Radiation</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Pesticides" >
-                                                        <label class="form-check-label" for="">Pesticides</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.Pesticides" :false-value="''" :true-value="'Pesticides'" type="checkbox" id="E4"  >
+                                                        <label class="form-check-label" for="E4">Pesticides</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Chemicals in consumer products" >
-                                                        <label class="form-check-label" for="">Chemicals in consumer products</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.Chemicals" :false-value="''" :true-value="'Chemicals in Consumer Products'" type="checkbox" id="E5"  >
+                                                        <label class="form-check-label" for="E5">Chemicals in consumer products</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Extreme temperatures and weather events" >
-                                                        <label class="form-check-label" for="">Extreme temperatures and weather events</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.WeatherEvents" :false-value="''" :true-value="'Weather Events'" type="checkbox" id="E6"  >
+                                                        <label class="form-check-label" for="E6">Weather events</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Extreme temperatures and weather events" >
-                                                        <label class="form-check-label" for="">None</label>
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.None" :false-value="''" :true-value="'None'" type="checkbox" id="E7"  >
+                                                        <label class="form-check-label" for="E7">None</label>
                                                         </div>
 
                                                         <div class="form-check form-check-inline">
-                                                        <input class="form-check-input"  type="checkbox" id="" value="Extreme temperatures and weather events" >
-                                                        <label class="form-check-label" for="">Others:</label>
-                                                        <input type="text" class="form-control">
+                                                        <input class="form-check-input"  v-model="this.patStore.occupational.ExposureTo.Others" :false-value="''" :true-value="'Others'" type="checkbox" id="E8" >
+                                                        <label class="form-check-label" for="E8">Others:</label>
+                                                        <input type="text" class="form-control" v-model="this.patStore.occupational.ExposureToOthers">
                                                         </div>
                                                 </div>
                                             </div>
@@ -63,7 +63,7 @@
                                                     <label for=""><b>Longest Job Held:</b></label>
                                                     <div class="row">
                                                         <div class="col">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" v-model="this.patStore.occupational.LongestJobHeld">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn btn-secondary border-b border-teal font-semibold" @click="close">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" @click="save" class="btn btn-primary">Save changes</button>
                                         </div>
                                     </div>
                                 </div>
@@ -85,9 +85,63 @@
 </template>
   
   <script>
+  import axios from 'axios';
+  import { usePatStore } from '@/store/PatStore';
+  import { storeToRefs } from 'pinia';
       export default {
+        setup(){
+            const patStore = usePatStore()
+            const { count , formStore} = storeToRefs(patStore)
+            return { patStore, count, formStore }
+        },
+        data(){
+            return{
+                form:{
+                    enccode:this.$route.params.hpercode,
+                    entryBy:'',
+                    section:'occupational',
+                    data:{
+                        ExposureTo:{
+                            AirContaminants:null,
+                            ToxicWaste:null,
+                            Radiation:null,
+                            Pesticides:null,
+                            Chemicals:null,
+                            WeatherEvents:null,
+                            None:null,
+                            Others:null,
+                        },
+                        ExposureToOthers: null,
+                        LongestJobHeld: null
+                    }
+                }
+            }
+        },
           name: 'Modal',
+          async created(){
+            this.form.data= this.patStore.occupational 
+            const res = await this.getCancerData(this.hpercode,'occupational')
+                if(res.data.length != 0)this.occupational = JSON.parse(res.data[0].data )
+          },
           methods: {
+            async getCancerData(enccodeID, sectionName){
+                const enccode = {
+                   enccode: enccodeID,
+                   section: sectionName
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/spCancerGetDataPerSection",enccode)
+                return response
+            },
+            async save(){
+                console.log(JSON.stringify(this.form))
+                const json = {
+                    json: JSON.stringify(this.form)
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/saveCancerDataJSON",json)
+                
+                this.close()
+                return response;
+            },
             close() {
                 this.$emit("close");
             }

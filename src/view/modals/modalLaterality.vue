@@ -15,31 +15,31 @@
                                                     <div class="mb-3">
                                                         <div class="col">
                                                                 <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" v-model="test" value="Left" id="flexCheckDefault">
+                                                                <input class="form-check-input" type="checkbox"  value="Left" id="flexCheckDefault">
                                                                 <label class="form-check-label" for="flexCheckDefault">
                                                                     Left
                                                                 </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" v-model="test" value="Right" id="flexCheckDefault">
+                                                                <input class="form-check-input" type="checkbox"  value="Right" id="flexCheckDefault">
                                                                 <label class="form-check-label" for="flexCheckDefault">
                                                                     Right
                                                                 </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" v-model="test" value="Mid" id="flexCheckDefault">
+                                                                <input class="form-check-input" type="checkbox"  value="Mid" id="flexCheckDefault">
                                                                 <label class="form-check-label" for="flexCheckDefault">
                                                                     Mid
                                                                 </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" v-model="test" value="Bilateral" id="flexCheckDefault">
+                                                                <input class="form-check-input" type="checkbox"  value="Bilateral" id="flexCheckDefault">
                                                                 <label class="form-check-label" for="flexCheckDefault">
                                                                     Bilateral
                                                                 </label>
                                                                 </div>
                                                                 <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" v-model="test" value="Undertermined" id="flexCheckDefault">
+                                                                <input class="form-check-input" type="checkbox"  value="Undertermined" id="flexCheckDefault">
                                                                 <label class="form-check-label" for="flexCheckDefault">
                                                                     Undertermined
                                                                 </label>

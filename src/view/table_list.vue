@@ -34,7 +34,7 @@ export default {
     },
     methods:{
         async getAllPatientList(){
-            const response = await axios.get('http://192.168.7.188:8040/api/cancerPatientList')
+            const response = await axios.get('http://192.168.7.66:8040/api/cancerPatientList')
             // return response.json()
             return response
         }

@@ -25,7 +25,7 @@
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
-                         <th><div class="col"><input class="form-control" type="text" v-model="searchHpercode" placeholder="hpercode" /></div></th>
+                         <th><div class="col"><input class="form-control" type="text" v-model="searchHpercode" placeholder="Hospital No." /></div></th>
                          <!-- <th><input class="form-control" type="text" v-model="searchHpercode" placeholder="hpercode"/></th> -->
                          <th><div class="col"><input class="form-control" type="text" v-model="searchFamily" placeholder="Family Name" /></div></th>
                          <th><div class="col"><input class="form-control" type="text" v-model="searchFirst" placeholder="First Name" /></div></th>
@@ -124,12 +124,12 @@ export default {
   },
   methods:{
     async getAllPatientList() {
-            const response = await axios.get('http://192.168.7.188:8040/api/cancerPatientList')
+            const response = await axios.get('http://192.168.7.66:8040/api/cancerPatientList')
             // return response.json()
             return response
         },
     async getPatHpercode(){
-          const response = await axios.get('http://192.168.7.188:8040/api/patient/' + this.hpercode)
+          const response = await axios.get('http://192.168.7.66:8040/api/patient/' + this.hpercode)
           return response
     }
         // onChangePage(resultQuery){

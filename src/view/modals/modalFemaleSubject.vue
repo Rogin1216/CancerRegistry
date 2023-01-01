@@ -18,7 +18,7 @@
                                                             <div class="col">
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Age of Menarche: </label>
-                                                                    <input type="number" class="form-control">
+                                                                    <input type="number" class="form-control" v-model="this.patStore.forFemaleSubjects.AgeOfMenarche" >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -27,9 +27,9 @@
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Menstrual Status: </label>
                                                                     
-                                                                    <select class="form-select" name="" id="">
-                                                                        <option value="">Premonopausal</option>
-                                                                        <option value="">Postmenopausal</option>
+                                                                    <select class="form-select" name="" id="" v-model="this.patStore.forFemaleSubjects.MenstrualStatus">
+                                                                        <option :true-value="'Premonopausal'">Premonopausal</option>
+                                                                        <option :true-value="'PostMenopausal'">Postmenopausal</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -38,9 +38,16 @@
                                                             <div class="col">
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Age of Menopause: </label>
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" v-model="this.patStore.forFemaleSubjects.AgeOfMenopause" :true-value="'50'">
                                                                     <label for="" class="form-control">Cause: </label>
-                                                                    <input type="text" class="form-control">
+                                                                    
+                                                                    <select name="" id="" class="form-select" v-model="this.patStore.forFemaleSubjects.Cause">
+                                                                        <option selected value="N/A"></option>
+                                                                        <option value="Surgical">Surgical</option>
+                                                                        <option value="Natural">Natural</option>
+                                                                        <option value="Others">Others</option>
+                                                                    </select>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -48,11 +55,11 @@
                                                             <div class="col">
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Contraceptive use (Duration): </label>
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" v-model="this.patStore.forFemaleSubjects.ContraCeptiveUse">
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="mb-3">
@@ -61,7 +68,7 @@
                                                             <div class="col">
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Age of 1<sup>st</sup> birth: </label>
-                                                                    <input type="number" class="form-control">
+                                                                    <input type="number" class="form-control" v-model="this.patStore.forFemaleSubjects.Age1stLiveBirth">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -69,11 +76,10 @@
                                                             <div class="col">
                                                                 <div class="input-group mb-3">
                                                                     <label for="" class="form-control">Pregnancy Stage: </label>
-                                                                    <select class="form-select" name="" id="">
-                                                                        <option value="">---</option>
-                                                                        <option value="">1st trimester</option>
-                                                                        <option value="">2nd trimester</option>
-                                                                        <option value="">3rd trimester</option>
+                                                                    <select class="form-select" name="" id="" v-model="this.patStore.forFemaleSubjects.PregnancyStage">
+                                                                        <option :true-value="'1st Trimester'">1st trimester</option>
+                                                                        <option :true-value="'2nd Trimester'">2nd trimester</option>
+                                                                        <option :true-value="'3rd Trimester'">3rd trimester</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -85,7 +91,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" @click="close">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" @click="save" class="btn btn-primary">Save changes</button>
                                         </div>
                                         </div>
                                     </div>
@@ -94,9 +100,60 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
+import { usePatStore } from '@/store/PatStore';
+import { storeToRefs } from 'pinia';
     export default{
+        setup(){
+            const patStore = usePatStore()
+            const { count , formStore} = storeToRefs(patStore)
+            return { patStore, count, formStore }
+        },
+        data(){
+            return{
+                form:{
+                    enccode:this.$route.params.hpercode,
+                    entryBy:'',
+                    section:'forFemaleSubjects',
+                    data:{
+                        AgeOfMenarche:null,
+                        MenstrualStatus:null,
+                        AgeOfMenopause:null,
+                        Cause:null,
+                        ContraCeptiveUse:null,
+                        Age1stLiveBirth:null,
+                        PregnancyStage:null
+                    }
+                }
+            }
+        },
         name: 'Modal',
+        async created(){
+            this.form.data= this.patStore.forFemaleSubjects 
+
+            const res = await this.getCancerData(this.hpercode,'forFemaleSubjects')
+                if(res.data.length != 0)this.forFemaleSubjects = JSON.parse(res.data[0].data )
+        },
         methods: {
+            async getCancerData(enccodeID, sectionName){
+                const enccode = {
+                   enccode: enccodeID,
+                   section: sectionName
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/spCancerGetDataPerSection",enccode)
+                return response
+            },
+            async save(){
+                console.log(JSON.stringify(this.form))
+                
+                const json = {
+                    json: JSON.stringify(this.form)
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/saveCancerDataJSON",json)
+
+                this.close()
+                return response;
+            },
             close(){
                 this.$emit("close")
             }

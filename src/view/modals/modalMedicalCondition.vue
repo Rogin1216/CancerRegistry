@@ -13,12 +13,15 @@
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="mb-3">
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6">
-CONDITION:
-
-
-MEDICATION:
-
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" v-model="this.patStore.medicalCondition.Condition" placeholder="CONDITION:">
+</textarea>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" v-model="this.patStore.medicalCondition.Medication" placeholder="MEDICATION:">
 </textarea>
                                                         </div>
                                                 </div>
@@ -27,7 +30,7 @@ MEDICATION:
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" @click="close">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" @click="save" class="btn btn-primary">Save changes</button>
                                         </div>
                                         </div>
                                     </div>
@@ -36,9 +39,61 @@ MEDICATION:
     </div>
 </template>
 <script>
+import axios from 'axios'
+import { usePatStore } from '@/store/PatStore';
+import { storeToRefs } from 'pinia';
     export default{
         name: 'Modal',
+        setup(){
+            const patStore = usePatStore()
+            const { count , formStore} = storeToRefs(patStore)
+            return { patStore, count, formStore }
+        }, 
+        data(){
+            return{
+                form:{
+                    enccode:this.$route.params.hpercode,
+                    entryBy:'',
+                    section:'medicalConditions',
+                    data:{
+                        Condition:null,
+                        Medication:null,
+                    }
+                }
+            }
+        },
+        async created(){
+            this.form.data= this.patStore.medicalCondition 
+
+            const res = await this.getCancerData(this.form.enccode,'medicalConditions')
+            console.log("res10", JSON.parse(res.data[0].data))
+                // if(res.data.length != 0)this.medicalConditions = JSON.parse(res.data[0].data )
+            // this.getCancerData(this.form.enccode,'medicalConditions').then(response =>{
+
+            //     if(JSON.parse(response.data[0].data) != null)
+            //         this.this.patStore.medicalCondition = JSON.parse(response.data[0].data);
+
+            // })
+        },
         methods: {
+            async getCancerData(enccodeID, sectionName){
+                const enccode = {
+                   enccode: enccodeID,
+                   section: sectionName
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/spCancerGetDataPerSection",enccode)
+                return response
+            },
+            async save(){
+                console.log(JSON.stringify(this.form))
+                const json = {
+                    json: JSON.stringify(this.form)
+                }
+                const response = await axios.post("http://192.168.7.66:8040/api/saveCancerDataJSON",json)
+                
+                this.close()
+                return response;
+            },
             close(){
                 this.$emit("close")
             }
@@ -68,7 +123,7 @@ MEDICATION:
         flex-direction: column;
         border-radius: 10px;
         width: 400px;
-        height: 400px;
+        height: 500px;
         margin-top: 5%;
         margin-left: 45%;
     }

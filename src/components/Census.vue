@@ -8,7 +8,7 @@
         </div>
         <div class="col">
             <div class="border">
-                <LineGraph :key="yearprops" :name="name" :endpoint="endpoint" :title="title" :year="this.yearprops"/>
+                <BarGraph :key="yearprops" :name="name" :endpoint="endpoint" :title="title" :year="this.yearprops"/>
             </div>
         </div>
         <div class="col">
@@ -57,13 +57,13 @@
     </div>
 </template>
 <script>
-import LineGraph from '../view/Charts/Line_Graph.vue'
-import Chart from 'chart.js/auto';
+import BarGraph from '../view/Charts/Bar_Graph.vue'
+
 import axios from 'axios';
     export default{
         name: 'Child',
         components:{
-    LineGraph
+    BarGraph
 },
         props:[
             'title',
@@ -90,7 +90,7 @@ import axios from 'axios';
                 year:this.yearprops
             }
             // console.log("YEAR ", chemoVolYear)
-            const response = await axios.post(`http://192.168.7.188:8040/api/${this.endpoint}`, chemoVolYear)
+            const response = await axios.post(`http://192.168.7.66:8040/api/${this.endpoint}`, chemoVolYear)
             // console.log("endpoint:",this.endpoint)
             //console.log(response.data);
             this.ChemoVolResult = JSON.parse(JSON.stringify(response.data))

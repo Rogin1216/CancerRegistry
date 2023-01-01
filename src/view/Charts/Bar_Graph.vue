@@ -41,31 +41,31 @@ export default {
       };
       // console.log(chemoVolYear)
       const res = await axios
-        .post(`http://192.168.7.188:8040/api/${this.endpoint}`,  chemoVolYear)
+        .post(`http://192.168.7.66:8040/api/${this.endpoint}`,  chemoVolYear)
         //.then((res) => {
           //temp = JSON.parse(JSON.stringify(res.data));
           return this.arrayedObject(JSON.parse(JSON.stringify(res.data)));
         //});
 
     },
-    chartDataArray(responseobj) {
-      const arrayKey = [];
-      const arrayValue = [];
-      let arrayFinal = [];
-      // console.log(this.row1[0]);
-      //chartFirstRow = responseobj
-      for (var key of Object.keys(responseobj)) {
-        arrayKey.push(key);
-        arrayValue.push(responseobj[key]);
-      }
-      //console.log(arrayKey);
-      //console.log(arrayValue);
-      arrayKey.splice(0, 2);
-      arrayValue.splice(0, 2);
-      arrayFinal = [arrayKey, arrayValue];
-      //console.log(arrayFinal);
-      return [arrayKey, arrayValue];
-    },
+    // chartDataArray(responseobj) {
+    //   const arrayKey = [];
+    //   const arrayValue = [];
+    //   let arrayFinal = [];
+    //   // console.log(this.row1[0]);
+    //   //chartFirstRow = responseobj
+    //   for (var key of Object.keys(responseobj)) {
+    //     arrayKey.push(key);
+    //     arrayValue.push(responseobj[key]);
+    //   }
+    //   //console.log(arrayKey);
+    //   //console.log(arrayValue);
+    //   arrayKey.splice(0, 2);
+    //   arrayValue.splice(0, 2);
+    //   arrayFinal = [arrayKey, arrayValue];
+    //   //console.log(arrayFinal);
+    //   return [arrayKey, arrayValue];
+    // },
 
     arrayedObject(obj2) {
       const arrKeys = Object.keys(obj2[0]);
@@ -105,6 +105,7 @@ export default {
         labels: labels,
         datasets: [
           {
+            
             label: chartArrayData[3][0],
             data: chartArrayData[1],
             backgroundColor: ["rgb(255, 99, 132)"],
@@ -129,6 +130,7 @@ export default {
         type: "bar",
         data: data,
         options: {
+          
           scales: {
             y: {
               beginAtZero: true,
